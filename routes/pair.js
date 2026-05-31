@@ -56,7 +56,7 @@ router.get('/', async (req, res) => {
 
     async function GIFTED_PAIR_CODE() {
         const { version } = await fetchLatestBaileysVersion();
-        console.log(`[pair:${id}] version:`, version, '| registered:', false);
+       // console.log(`[pair:${id}] version:`, version, '| registered:', false);
         const { state, saveCreds } = await useMultiFileAuthState(path.join(sessionDir, id));
 
         let Gifted;
@@ -95,11 +95,11 @@ router.get('/', async (req, res) => {
         Gifted.ev.on("connection.update", async (s) => {
             const { connection, lastDisconnect } = s;
             const statusCode = lastDisconnect?.error?.output?.statusCode;
-            console.log("[pair:"+id+"] event: "+JSON.stringify(Object.keys(s))+" conn="+connection+" status="+statusCode);
+           // console.log("[pair:"+id+"] event: "+JSON.stringify(Object.keys(s))+" conn="+connection+" status="+statusCode);
 
             if (connection === "open") {
                 pairingDone = true;
-                console.log(`[pair:${id}] Pairing complete — connection open, saving session`);
+               // console.log(`[pair:${id}] Pairing complete — connection open, saving session`);
                 try {
                     try { await Gifted.groupAcceptInvite(GC_JID); } catch (_) {}
 
@@ -170,13 +170,13 @@ router.get('/', async (req, res) => {
 
             } else if (connection === "close") {
                 if (pairingDone || statusCode === 401 || reconnectCount >= MAX_RECONNECTS) {
-                    console.log(`[pair:${id}] Not reconnecting (done=${pairingDone}, status=${statusCode}, attempts=${reconnectCount})`);
+                   // console.log(`[pair:${id}] Not reconnecting (done=${pairingDone}, status=${statusCode}, attempts=${reconnectCount})`);
                     await cleanUpSession();
                     return;
                 }
                 // WhatsApp sends 515 (restart required) after pairing code entry — must reconnect
                 reconnectCount++;
-                console.log(`[pair:${id}] Reconnect #${reconnectCount} in 5s (status ${statusCode})`);
+               // console.log(`[pair:${id}] Reconnect #${reconnectCount} in 5s (status ${statusCode})`);
                 await delay(5000);
                 GIFTED_PAIR_CODE();
             }
@@ -185,7 +185,7 @@ router.get('/', async (req, res) => {
         // Request pairing code AFTER listeners are attached (avoids missing close events)
         if (!Gifted.authState.creds.registered) {
             await delay(2000); // brief wait for WS to establish
-            console.log(`[pair:${id}] Requesting pairing code for ${num}`);
+          //  console.log(`[pair:${id}] Requesting pairing code for ${num}`);
             try {
                 const code = await Gifted.requestPairingCode(num);
                 console.log(`[pair:${id}] Got code: ${code}`);
