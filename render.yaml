@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: gifted-session
+    env: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+      # Database Configuration (uncomment and configure as needed)
+      # - key: MONGODB_URI
+      #   value: ${MONGODB_URI}
+      # - key: DATABASE_URL
+      #   value: ${DATABASE_URL}
+      # Add any other environment variables your app requires
